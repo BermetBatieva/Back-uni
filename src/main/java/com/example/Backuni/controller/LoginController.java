@@ -31,7 +31,7 @@ public class LoginController {
 
     @ApiOperation(value = "Авторизация пользователей. (Получение токена)")
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody UserDto userDto) throws Exception {
+    public ResponseEntity<AuthenticationResponse> authenticateUser(@RequestBody UserDto userDto) throws Exception {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(userDto.getEmail(), userDto.getPassword())
