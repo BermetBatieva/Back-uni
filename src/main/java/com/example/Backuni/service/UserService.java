@@ -27,11 +27,6 @@ public class UserService implements UserDetailsService {
                 user.getPassword(), user.getAuthorities());
     }
 
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        return getByEmail(email);
-    }
 
     public User getByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(
