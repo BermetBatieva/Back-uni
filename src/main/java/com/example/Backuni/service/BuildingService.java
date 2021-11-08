@@ -77,6 +77,7 @@ public class BuildingService {
             model.setImage(building.getImage());
             model.setName(building.getName());
             model.setAddress(building.getAddress());
+            model.setDescription(building.getDescription());
             model.setQuantityOfFloor(building.getQuantityOfFloor());
             model.setLink2gis(building.getLink2gis());
             result.add(model);

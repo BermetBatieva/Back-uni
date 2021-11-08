@@ -10,8 +10,4 @@ import java.util.List;
 public interface BuildingRepository extends JpaRepository<Building, Long> {
     boolean existsBuildingByName(String name);
 
-
-
-
-
 }
