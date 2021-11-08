@@ -30,8 +30,6 @@ public class Building {
     private String link2gis;
 
     @Column(name = "quantity_of_floor")
-    private Integer quantityOfFloor;
-
-
+    private Integer quantityOfFloor;//5
 
 }

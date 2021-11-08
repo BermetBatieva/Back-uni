@@ -94,4 +94,14 @@ public class BuildingService {
         buildingDto.setImage(building.get().getImage());
         return buildingDto;
     }
+
+    public List<Integer> getAllFloor(Long id){
+        Optional<Building> building = repository.findById(id);
+        List<Integer> floors = new ArrayList<>();
+
+        for(int i = 1; i <= building.get().getQuantityOfFloor();i++){
+            floors.add(i);
+        }
+        return floors;
+    }
 }

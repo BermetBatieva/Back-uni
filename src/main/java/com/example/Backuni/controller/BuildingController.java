@@ -59,4 +59,11 @@ public class BuildingController {
     public ResponseEntity<BuildingDto> getByBuildId(@PathVariable Long id){
         return new ResponseEntity<>(service.getById(id), HttpStatus.OK);
     }
+
+
+    @ApiOperation("получение всех этажей")
+    @GetMapping("get-all-floor-by-build/{id}")
+    public List<Integer> getAllFloorsByBuild(@PathVariable Long id){
+       return service.getAllFloor(id);
+    }
 }
