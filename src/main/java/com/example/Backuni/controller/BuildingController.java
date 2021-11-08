@@ -61,7 +61,7 @@ public class BuildingController {
     }
 
 
-    @ApiOperation("получение всех этажей")
+    @ApiOperation("получение всех этажей по зданию")
     @GetMapping("get-all-floor-by-build/{id}")
     public List<Integer> getAllFloorsByBuild(@PathVariable Long id){
        return service.getAllFloor(id);
