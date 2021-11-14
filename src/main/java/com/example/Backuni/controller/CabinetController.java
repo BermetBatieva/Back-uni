@@ -23,7 +23,7 @@ public class CabinetController {
 
     @ApiOperation(value = "Добавление кабинета")
     @PostMapping("/add")
-    public ResponseEntity<Cabinet> create(@RequestBody CabinetDto cabinetDto) throws AlreadyExistException {
+    public ResponseEntity<Cabinet> create(@RequestBody CabinetDto cabinetDto) {
         return new ResponseEntity<>(cabinetService.add(cabinetDto), HttpStatus.OK);
     }
     @ApiOperation(value = "получение всех кабинетов по зданию и этажу")

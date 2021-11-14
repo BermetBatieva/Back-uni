@@ -26,13 +26,9 @@ public class CabinetService {
 
 
 
-    public Cabinet add(CabinetDto cabinetDto) throws AlreadyExistException {
-        if (cabinetRepository.existsByNumber(cabinetDto.getNumber())) {
-            throw new AlreadyExistException("уже есть кабинет с таким номером!");
-        } else {
+    public Cabinet add(CabinetDto cabinetDto) {
             Cabinet cabinet = new Cabinet();
             return saverCabinet(cabinet, cabinetDto);
-        }
     }
 
     @Transactional
