@@ -72,7 +72,7 @@ public class BuildingService {
         return buildingDto;
     }
 
-    public List<BuildingDto> allBuilding() {
+    public List<Building> allBuilding() {
         List<Building> list = repository.getBuildingByStatus(Status.ACTIVATE);
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
@@ -85,7 +85,7 @@ public class BuildingService {
             model.setLink2gis(building.getLink2gis());
             result.add(model);
         }
-        return result;
+        return list;
     }
 
     public BuildingDto getById(Long id){

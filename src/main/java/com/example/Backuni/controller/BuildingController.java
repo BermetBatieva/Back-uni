@@ -50,7 +50,7 @@ public class BuildingController {
 
     @ApiOperation("получение всех зданий")
     @GetMapping("get-all-building")
-    public List<BuildingDto> getAllBuilding(){
+    public List<Building> getAllBuilding(){
         return service.allBuilding();
     }
 
