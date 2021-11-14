@@ -94,6 +94,8 @@ public class BuildingService {
         buildingDto.setId(building.get().getId());
         buildingDto.setName(building.get().getName());
         buildingDto.setLink2gis(building.get().getLink2gis());
+        buildingDto.setDescription(building.get().getDescription());
+        buildingDto.setQuantityOfFloor(building.get().getQuantityOfFloor());
         buildingDto.setAddress(building.get().getAddress());
         buildingDto.setImage(building.get().getImage());
         return buildingDto;
