@@ -36,6 +36,7 @@ public class BuildingService {
             building.setDescription(dto.getDescription());
             building.setName(dto.getName());
             building.setImage(dto.getImage());
+            building.setStatus(Status.ACTIVATE);
             building.setQuantityOfFloor(dto.getQuantityOfFloor());
             building.setLink2gis(dto.getLink2gis());
             repository.save(building);

@@ -39,6 +39,7 @@ public class CabinetService {
     Cabinet saverCabinet(Cabinet cabinet, CabinetDto cabinetDto) {
         cabinet.setBuilding(buildingRepository.findById(cabinetDto.getBuildingId())
                 .orElseThrow(()-> new ResourceNotFoundException("здание с таким id не найден")));
+        cabinet.setStatus(Status.ACTIVATE);
         cabinet.setNumber(cabinetDto.getNumber());
         cabinet.setDescription(cabinetDto.getDescription());
         cabinet.setImage(cabinetDto.getImage());
