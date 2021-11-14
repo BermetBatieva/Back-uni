@@ -2,6 +2,7 @@ package com.example.Backuni.controller;
 
 import com.example.Backuni.dto.AuthenticationResponse;
 import com.example.Backuni.dto.BuildingDto;
+import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.entity.Building;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.repository.BuildingRepository;
@@ -38,10 +39,9 @@ public class BuildingController {
     }
 
     @PostMapping("add")
-    public ResponseEntity<BuildingDto> addNewBuilding(@RequestBody BuildingDto model) {
+    public ResponseEntity<Building> addNewBuilding(@RequestBody BuildingDto model) {
         if(!repository.existsBuildingByName(model.getName())) {
-            service.addBuilding(model);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+            return new ResponseEntity<>( service.addBuilding(model), HttpStatus.OK);
         }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -65,5 +65,17 @@ public class BuildingController {
     @GetMapping("get-all-floor-by-build/{id}")
     public List<Integer> getAllFloorsByBuild(@PathVariable Long id){
        return service.getAllFloor(id);
+    }
+
+    @ApiOperation("Удаление здания")
+    @DeleteMapping("delete/{id}")
+    public DeletedDTO deleteMenuById(@PathVariable Long id) {
+        return service.deleteById(id);
+    }
+
+    @ApiOperation("редактирование здания")
+    @PutMapping("edit/{id}")
+    public ResponseEntity<Building> update(@PathVariable Long id,@RequestBody BuildingDto model) {
+        return new ResponseEntity<>(service.updateById(id,model),HttpStatus.OK);
     }
 }

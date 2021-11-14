@@ -1,6 +1,7 @@
 package com.example.Backuni.repository;
 
 import com.example.Backuni.entity.Building;
+import com.example.Backuni.entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,4 +11,5 @@ import java.util.List;
 public interface BuildingRepository extends JpaRepository<Building, Long> {
     boolean existsBuildingByName(String name);
 
+    List<Building> getBuildingByStatus(Status status);
 }

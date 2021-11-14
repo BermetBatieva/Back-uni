@@ -32,4 +32,7 @@ public class Building {
     @Column(name = "quantity_of_floor")
     private Integer quantityOfFloor;//5
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
 }

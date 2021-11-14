@@ -33,5 +33,8 @@ public class Cabinet {
     @ManyToOne
     private  Building building;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
 
 }

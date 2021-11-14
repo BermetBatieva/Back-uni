@@ -10,7 +10,9 @@ public class ResourceNotFoundException extends RuntimeException{
     }
 
     public ResourceNotFoundException(String message) {
-
         super(message);
+    }
+
+    public ResourceNotFoundException(String s, Long id) {
     }
 }

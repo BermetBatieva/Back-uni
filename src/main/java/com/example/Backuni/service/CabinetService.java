@@ -1,11 +1,8 @@
 package com.example.Backuni.service;
 
-import com.example.Backuni.dto.BuildingDto;
-import com.example.Backuni.dto.CabinetDto;
-import com.example.Backuni.dto.CabinetsByBuildingIdAndFloorNum;
-import com.example.Backuni.dto.ListCabinets;
-import com.example.Backuni.entity.Building;
+import com.example.Backuni.dto.*;
 import com.example.Backuni.entity.Cabinet;
+import com.example.Backuni.entity.Status;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.exception.ResourceNotFoundException;
 import com.example.Backuni.repository.BuildingRepository;
@@ -29,7 +26,7 @@ public class CabinetService {
 
 
 
-    public CabinetDto add(CabinetDto cabinetDto) throws AlreadyExistException {
+    public Cabinet add(CabinetDto cabinetDto) throws AlreadyExistException {
         if (cabinetRepository.existsByNumber(cabinetDto.getNumber())) {
             throw new AlreadyExistException("уже есть кабинет с таким номером!");
         } else {
@@ -39,7 +36,7 @@ public class CabinetService {
     }
 
     @Transactional
-    CabinetDto saverCabinet(Cabinet cabinet, CabinetDto cabinetDto) {
+    Cabinet saverCabinet(Cabinet cabinet, CabinetDto cabinetDto) {
         cabinet.setBuilding(buildingRepository.findById(cabinetDto.getBuildingId())
                 .orElseThrow(()-> new ResourceNotFoundException("здание с таким id не найден")));
         cabinet.setNumber(cabinetDto.getNumber());
@@ -48,12 +45,12 @@ public class CabinetService {
         cabinet.setFloorNumber(cabinetDto.getFloorNumber());
         cabinet.setImage(cabinetDto.getImage());
         cabinetRepository.save(cabinet);
-        return cabinetDto;
+        return cabinet;
     }
 
     public List<ListCabinets> getAllCabinetsByBuildingIdAndFloorNum(CabinetsByBuildingIdAndFloorNum ids){
-        List<Cabinet> cabinets = cabinetRepository.findByBuilding_IdAndFloorNumber(ids.getBuildingId(),
-                ids.getFloorNum());
+        List<Cabinet> cabinets = cabinetRepository.findByBuilding_IdAndFloorNumberAndStatus(ids.getBuildingId(),
+                ids.getFloorNum(),Status.ACTIVATE);
 
         List<ListCabinets> result = new ArrayList<>();
 
@@ -75,6 +72,30 @@ public class CabinetService {
         cabinetDto.setDescription(cabinet.get().getDescription());
         cabinetDto.setNumber(cabinet.get().getNumber());
         return cabinetDto;
+    }
+
+    @Transactional
+    public DeletedDTO deleteById(Long id) {
+        Cabinet cabinet = cabinetRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("cabinet с таким id не существует! id = ", id));
+        cabinet.setStatus(Status.DELETED);
+        cabinetRepository.save(cabinet);
+        return new DeletedDTO(id);
+    }
+
+    public Cabinet updateById(Long id,CabinetDto cabinetDto){
+        Cabinet cabinet = cabinetRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("cabinet с таким id не существует! id = ", id));
+        cabinet.setStatus(Status.ACTIVATE);
+        cabinet.setImage(cabinetDto.getImage());
+        cabinet.setDescription(cabinetDto.getDescription());
+        cabinet.setName(cabinetDto.getName());
+        cabinet.setName(cabinetDto.getName());
+        cabinet.setFloorNumber(cabinetDto.getFloorNumber());
+        cabinet.setNumber(cabinetDto.getNumber());
+        cabinetRepository.save(cabinet);
+
+        return cabinet;
     }
 
 

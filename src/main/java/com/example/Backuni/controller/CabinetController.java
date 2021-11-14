@@ -1,9 +1,8 @@
 package com.example.Backuni.controller;
 
-import com.example.Backuni.dto.BuildingDto;
-import com.example.Backuni.dto.CabinetDto;
-import com.example.Backuni.dto.CabinetsByBuildingIdAndFloorNum;
-import com.example.Backuni.dto.ListCabinets;
+import com.example.Backuni.dto.*;
+import com.example.Backuni.entity.Building;
+import com.example.Backuni.entity.Cabinet;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.service.CabinetService;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +23,7 @@ public class CabinetController {
 
     @ApiOperation(value = "Добавление кабинета")
     @PostMapping("/add")
-    public ResponseEntity<CabinetDto> create(@RequestBody CabinetDto cabinetDto) throws AlreadyExistException {
+    public ResponseEntity<Cabinet> create(@RequestBody CabinetDto cabinetDto) throws AlreadyExistException {
         return new ResponseEntity<>(cabinetService.add(cabinetDto), HttpStatus.OK);
     }
     @ApiOperation(value = "получение всех кабинетов по зданию и этажу")
@@ -36,5 +35,17 @@ public class CabinetController {
     @GetMapping("get-by-id/{id}")
     public ResponseEntity<CabinetDto> getByCabinetId(@PathVariable Long id){
         return new ResponseEntity<>(cabinetService.getById(id), HttpStatus.OK);
+    }
+
+    @ApiOperation("Удаление кабинета")
+    @DeleteMapping("delete/{id}")
+    public DeletedDTO deleteMenuById(@PathVariable Long id) {
+        return cabinetService.deleteById(id);
+    }
+
+    @ApiOperation("редактирование кабинета")
+    @PutMapping("edit/{id}")
+    public ResponseEntity<Cabinet> update(@PathVariable Long id, @RequestBody CabinetDto model) {
+        return new ResponseEntity<>(cabinetService.updateById(id,model),HttpStatus.OK);
     }
 }
