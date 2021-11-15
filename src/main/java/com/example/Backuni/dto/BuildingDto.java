@@ -1,5 +1,6 @@
 package com.example.Backuni.dto;
 
+import com.example.Backuni.entity.BuildingType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,8 @@ public class BuildingDto {
     private String usableArea;
 
     private Long yearOfConstruction;
+
+    private BuildingType buildingType;
 
 
 }

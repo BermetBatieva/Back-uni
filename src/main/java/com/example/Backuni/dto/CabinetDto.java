@@ -12,6 +12,8 @@ public class CabinetDto {
 
     private Long buildingId;
 
+    private Long id;
+
     private Long number;
 
     private byte[] image;

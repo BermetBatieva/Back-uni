@@ -8,6 +8,7 @@ import com.example.Backuni.repository.CabinetRepository;
 import com.example.Backuni.service.CabinetService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -57,4 +58,13 @@ public class CabinetController {
     public ResponseEntity<Cabinet> update(@PathVariable Long id, @RequestBody CabinetDto model) {
         return new ResponseEntity<>(cabinetService.updateById(id,model),HttpStatus.OK);
     }
+
+    @ApiOperation("получение всех кабинетов с пагинацией")
+    @GetMapping("/get-all-building-pagination")
+    public Page<CabinetDto> getAllCabinetForWeb(@RequestParam(defaultValue = "1") Integer pageNo,
+                                                  @RequestParam(defaultValue = "15") Integer pageSize,
+                                                  @RequestParam(defaultValue = "id") String sortBy){
+        return cabinetService.getAllCabinets(pageNo,pageSize,sortBy);
+    }
+
 }

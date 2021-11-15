@@ -1,10 +1,8 @@
 package com.example.Backuni.controller;
 
-import com.example.Backuni.dto.AuthenticationResponse;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.entity.Building;
-import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.repository.BuildingRepository;
 import com.example.Backuni.service.BuildingService;
 import io.swagger.annotations.ApiOperation;
@@ -14,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.security.PermitAll;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 @CrossOrigin
@@ -54,6 +50,14 @@ public class BuildingController {
         return service.allBuilding();
     }
 
+    @ApiOperation("получение всех зданий по категории пагинация")
+    @PostMapping("get-all-building-by-category-and-type/{categoryId}")
+    public List<BuildingDto> getAllBuildingByCategoryId(@PathVariable Long categoryId,
+                                                     @RequestParam(defaultValue = "1") Integer pageNo,
+                                                     @RequestParam(defaultValue = "15") Integer pageSize,
+                                                     @RequestParam(defaultValue = "id") String sortBy){
+        return service.getAllBuildingsByCategory(categoryId);
+    }
 
     @GetMapping("get-by-id/{id}")
     public ResponseEntity<BuildingDto> getByBuildId(@PathVariable Long id){

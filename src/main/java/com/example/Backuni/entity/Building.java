@@ -42,8 +42,14 @@ public class Building {
     @Column(name = "year_of_construction")
     private Long yearOfConstruction;//год постройки
 
+    @ManyToOne
+    private  Category category;
+
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private BuildingType type;
 
 }

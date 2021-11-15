@@ -1,13 +1,16 @@
 package com.example.Backuni.service;
 
 import com.example.Backuni.dto.*;
+import com.example.Backuni.entity.Building;
 import com.example.Backuni.entity.Cabinet;
 import com.example.Backuni.entity.Status;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.exception.ResourceNotFoundException;
 import com.example.Backuni.repository.BuildingRepository;
+import com.example.Backuni.repository.CabinetPaginationRepository;
 import com.example.Backuni.repository.CabinetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +23,9 @@ public class CabinetService {
 
     @Autowired
     private CabinetRepository cabinetRepository;
+
+    @Autowired
+    private CabinetPaginationRepository cabinetPaginationRepository;
 
     @Autowired
     private BuildingRepository buildingRepository;
@@ -82,7 +88,7 @@ public class CabinetService {
         return new DeletedDTO(id);
     }
 
-    public Cabinet updateById(Long id,CabinetDto cabinetDto){
+    public Cabinet updateById(Long id,CabinetDto cabinetDto) {
         Cabinet cabinet = cabinetRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("cabinet с таким id не существует! id = ", id));
         cabinet.setStatus(Status.ACTIVATE);
@@ -96,6 +102,37 @@ public class CabinetService {
 
         return cabinet;
     }
+
+
+
+        private CabinetDto convertToBuildingModel(Cabinet cabinet){
+            CabinetDto cabinetDto = new CabinetDto();
+
+            cabinetDto.setId(cabinet.getId());
+            cabinetDto.setName(cabinet.getName());
+            cabinetDto.setNumber(cabinet.getNumber());
+            cabinetDto.setImage(cabinet.getImage());
+            cabinetDto.setFloorNumber(cabinet.getFloorNumber());
+
+            return cabinetDto;
+        }
+
+    public Page<CabinetDto> getAllCabinets(Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        List<Cabinet> buildingList = cabinetRepository.findAll();
+        Page<Cabinet> buildingPage = cabinetPaginationRepository.findAll(pageable);
+        List<CabinetDto> transactionModelList = new ArrayList<>();
+
+        buildingPage.forEach(building -> {
+            CabinetDto model = convertToBuildingModel(building);
+
+            transactionModelList.add(model);
+        });
+
+        return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
+    }
+
 
 
 }

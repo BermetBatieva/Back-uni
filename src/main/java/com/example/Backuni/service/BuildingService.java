@@ -3,6 +3,8 @@ package com.example.Backuni.service;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.entity.Building;
+import com.example.Backuni.entity.BuildingType;
+import com.example.Backuni.entity.Category;
 import com.example.Backuni.entity.Status;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.exception.ResourceNotFoundException;
@@ -38,6 +40,7 @@ public class BuildingService {
             building.setYearOfConstruction(dto.getYearOfConstruction());
             building.setDescription(dto.getDescription());
             building.setName(dto.getName());
+            building.setType(dto.getBuildingType());
             building.setImage(dto.getImage());
             building.setStatus(Status.ACTIVATE);
             building.setQuantityOfFloor(dto.getQuantityOfFloor());
@@ -102,6 +105,7 @@ public class BuildingService {
                 () -> new ResourceNotFoundException("здание с таким id не существует! id = ", id));
         BuildingDto buildingDto = new BuildingDto();
         buildingDto.setId(building.getId());
+        buildingDto.setBuildingType(building.getType());
         buildingDto.setName(building.getName());
         buildingDto.setUsableArea(building.getUsableArea());
         buildingDto.setTotalArea(building.getTotalArea());
@@ -149,6 +153,22 @@ public class BuildingService {
         repository.save(build);
 
         return build;
+    }
+
+
+
+
+    public List<BuildingDto> getAllBuildingsByCategory(long id) {
+        List<Building> buildingListFilteredByCategory = repository.findByCategory_Id(id);
+        List<BuildingDto> buildingModelsList = new ArrayList<>();
+
+        buildingListFilteredByCategory.forEach(building -> {
+            BuildingDto buildingDto = convertToBuildingModel(building);
+
+            buildingModelsList.add(buildingDto);
+        });
+
+        return buildingModelsList;
     }
 
 }
