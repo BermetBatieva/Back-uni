@@ -33,6 +33,9 @@ public class BuildingService {
     public Building addBuilding(BuildingDto dto) {
             Building building = new Building();
             building.setAddress(dto.getAddress());
+            building.setTotalArea(dto.getTotalArea());
+            building.setUsableArea(dto.getUsableArea());
+            building.setYearOfConstruction(dto.getYearOfConstruction());
             building.setDescription(dto.getDescription());
             building.setName(dto.getName());
             building.setImage(dto.getImage());
@@ -65,6 +68,9 @@ public class BuildingService {
         buildingDto.setId(building.getId());
         buildingDto.setName(building.getName());
         buildingDto.setAddress(building.getAddress());
+        buildingDto.setTotalArea(building.getTotalArea());
+        buildingDto.setUsableArea(building.getUsableArea());
+        buildingDto.setYearOfConstruction(building.getYearOfConstruction());
         buildingDto.setImage(building.getImage());
         buildingDto.setLink2gis(building.getLink2gis());
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
@@ -80,6 +86,9 @@ public class BuildingService {
             model.setImage(building.getImage());
             model.setName(building.getName());
             model.setAddress(building.getAddress());
+            model.setYearOfConstruction(building.getYearOfConstruction());
+            model.setTotalArea(building.getTotalArea());
+            model.setUsableArea(building.getUsableArea());
             model.setDescription(building.getDescription());
             model.setQuantityOfFloor(building.getQuantityOfFloor());
             model.setLink2gis(building.getLink2gis());
@@ -89,15 +98,19 @@ public class BuildingService {
     }
 
     public BuildingDto getById(Long id){
-        Optional<Building> building = repository.findById(id);
+        Building building = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("здание с таким id не существует! id = ", id));
         BuildingDto buildingDto = new BuildingDto();
-        buildingDto.setId(building.get().getId());
-        buildingDto.setName(building.get().getName());
-        buildingDto.setLink2gis(building.get().getLink2gis());
-        buildingDto.setDescription(building.get().getDescription());
-        buildingDto.setQuantityOfFloor(building.get().getQuantityOfFloor());
-        buildingDto.setAddress(building.get().getAddress());
-        buildingDto.setImage(building.get().getImage());
+        buildingDto.setId(building.getId());
+        buildingDto.setName(building.getName());
+        buildingDto.setUsableArea(building.getUsableArea());
+        buildingDto.setTotalArea(building.getTotalArea());
+        buildingDto.setYearOfConstruction(building.getYearOfConstruction());
+        buildingDto.setLink2gis(building.getLink2gis());
+        buildingDto.setDescription(building.getDescription());
+        buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
+        buildingDto.setAddress(building.getAddress());
+        buildingDto.setImage(building.getImage());
         return buildingDto;
     }
 
@@ -127,6 +140,9 @@ public class BuildingService {
         build.setImage(building.getImage());
         build.setDescription(building.getDescription());
         build.setName(building.getName());
+        build.setYearOfConstruction(build.getYearOfConstruction());
+        build.setTotalArea(building.getTotalArea());
+        build.setUsableArea(building.getUsableArea());
         build.setAddress(building.getAddress());
         build.setLink2gis(building.getLink2gis());
         build.setQuantityOfFloor(building.getQuantityOfFloor());

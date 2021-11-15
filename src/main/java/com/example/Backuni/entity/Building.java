@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,7 +18,7 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String name; //наименование организации
 
     private String address;
 
@@ -31,6 +31,17 @@ public class Building {
 
     @Column(name = "quantity_of_floor")
     private Integer quantityOfFloor;//5
+
+    @Column(name = "total_area")
+    private String totalArea; //общая площадь
+
+
+    @Column(name = "usable_area")
+    private String usableArea;//полезная площадь
+
+    @Column(name = "year_of_construction")
+    private Long yearOfConstruction;//год постройки
+
 
     @Enumerated(EnumType.STRING)
     private Status status;

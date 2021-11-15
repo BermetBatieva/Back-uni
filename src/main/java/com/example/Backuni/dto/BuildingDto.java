@@ -23,5 +23,11 @@ public class BuildingDto {
 
     private Integer quantityOfFloor;
 
+    private String totalArea;
+
+    private String usableArea;
+
+    private Long yearOfConstruction;
+
 
 }

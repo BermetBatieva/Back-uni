@@ -4,6 +4,7 @@ import com.example.Backuni.dto.*;
 import com.example.Backuni.entity.Building;
 import com.example.Backuni.entity.Cabinet;
 import com.example.Backuni.exception.AlreadyExistException;
+import com.example.Backuni.repository.CabinetRepository;
 import com.example.Backuni.service.CabinetService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,19 @@ public class CabinetController {
     @Autowired
     private CabinetService cabinetService;
 
+    @Autowired
+    private CabinetRepository repository;
+
     @ApiOperation(value = "Добавление кабинета")
     @PostMapping("/add")
     public ResponseEntity<Cabinet> create(@RequestBody CabinetDto cabinetDto) {
-        return new ResponseEntity<>(cabinetService.add(cabinetDto), HttpStatus.OK);
+        if(!repository.existsByNumber(cabinetDto.getNumber())) {
+            return new ResponseEntity<>(cabinetService.add(cabinetDto), HttpStatus.OK);
+        }else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
+
     @ApiOperation(value = "получение всех кабинетов по зданию и этажу")
     @GetMapping("get-all-by-build-and-floor")
     public List<ListCabinets> getAllByBuildAndFloor(@RequestBody CabinetsByBuildingIdAndFloorNum c){
