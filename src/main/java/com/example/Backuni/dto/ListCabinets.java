@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Data
 public class ListCabinets {
 
+    private  Long id;
+
     private Long number;
 
     private String description;

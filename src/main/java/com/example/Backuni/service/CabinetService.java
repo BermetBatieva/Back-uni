@@ -53,6 +53,7 @@ public class CabinetService {
 
         for(Cabinet cabinet : cabinets){
             ListCabinets model = new ListCabinets();
+            model.setId(cabinet.getId());
             model.setImage(cabinet.getImage());
             model.setNumber(cabinet.getNumber());
             model.setDescription(cabinet.getDescription());
