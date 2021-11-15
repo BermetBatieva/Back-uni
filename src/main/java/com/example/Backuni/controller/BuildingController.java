@@ -29,7 +29,7 @@ public class BuildingController {
     @ApiOperation("получение всех зданий с пагинацией")
     @GetMapping("/get-all-building-pagination")
     public Page<BuildingDto> getAllBuildingForWeb(@RequestParam(defaultValue = "1") Integer pageNo,
-                                            @RequestParam(defaultValue = "15") Integer pageSize,
+                                            @RequestParam(defaultValue = "10") Integer pageSize,
                                             @RequestParam(defaultValue = "id") String sortBy){
         return service.getAllBuildings(pageNo,pageSize,sortBy);
     }
@@ -54,7 +54,7 @@ public class BuildingController {
     @PostMapping("get-all-building-by-category-and-type/{categoryId}")
     public List<BuildingDto> getAllBuildingByCategoryId(@PathVariable Long categoryId,
                                                      @RequestParam(defaultValue = "1") Integer pageNo,
-                                                     @RequestParam(defaultValue = "15") Integer pageSize,
+                                                     @RequestParam(defaultValue = "10") Integer pageSize,
                                                      @RequestParam(defaultValue = "id") String sortBy){
         return service.getAllBuildingsByCategory(categoryId);
     }

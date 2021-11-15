@@ -62,7 +62,7 @@ public class CabinetController {
     @ApiOperation("получение всех кабинетов с пагинацией")
     @GetMapping("/get-all-building-pagination")
     public Page<CabinetDto> getAllCabinetForWeb(@RequestParam(defaultValue = "1") Integer pageNo,
-                                                  @RequestParam(defaultValue = "15") Integer pageSize,
+                                                  @RequestParam(defaultValue = "10") Integer pageSize,
                                                   @RequestParam(defaultValue = "id") String sortBy){
         return cabinetService.getAllCabinets(pageNo,pageSize,sortBy);
     }
