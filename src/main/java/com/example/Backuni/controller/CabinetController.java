@@ -36,7 +36,7 @@ public class CabinetController {
     }
 
     @ApiOperation(value = "получение всех кабинетов по зданию и этажу")
-    @GetMapping("get-all-by-build-and-floor")
+    @PostMapping("get-all-by-build-and-floor")
     public List<ListCabinets> getAllByBuildAndFloor(@RequestBody CabinetsByBuildingIdAndFloorNum c){
         return cabinetService.getAllCabinetsByBuildingIdAndFloorNum(c);
     }
