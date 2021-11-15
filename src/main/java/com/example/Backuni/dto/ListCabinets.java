@@ -13,4 +13,6 @@ public class ListCabinets {
     private Long number;
 
     private String description;
+
+    private byte[] image;
 }
