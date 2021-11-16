@@ -42,7 +42,7 @@ public class BuildingService {
 
     public Building addBuilding(BuildingDto dto) throws AlreadyExistException {
         if (repository.existsByName(dto.getName())) {
-            throw new AlreadyExistException("Меню с таким именем уже существует!");
+            throw new AlreadyExistException("здание с таким именем уже существует!");
         } else {
             Building building = new Building();
             return saver(building, dto);
@@ -76,6 +76,18 @@ public class BuildingService {
         return building;
     }
 
+    private  void updateAddressLink(LinkToMapDto linkToMapDto, Long id){
+
+        LinkToMap linkToMap = linkToMapRepository.findByBuilding_Id(id);
+
+        linkToMap.setLat(linkToMapDto.getLat());
+        linkToMap.setLon(linkToMap.getLon());
+        linkToMap.setBuilding(repository.getById(id));
+
+        linkToMapRepository.save(linkToMap);
+
+    }
+
     private  void addAddressLink(LinkToMapDto linkToMapDto, Long id){
 
         LinkToMap linkToMap = new LinkToMap();
@@ -86,6 +98,32 @@ public class BuildingService {
 
         linkToMapRepository.save(linkToMap);
 
+    }
+
+    @Transactional
+    Building updater(Building building, BuildingDto buildingDto) {
+        building.setName(buildingDto.getName());
+        building.setCategory(categoryRepository.findById(buildingDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("категория с такой id не найдено! id = ",
+                        buildingDto.getCategoryId())));
+        building.setDescription(buildingDto.getDescription());
+        building.setImage(buildingDto.getImage());
+        building.setTotalArea(buildingDto.getTotalArea());
+        building.setUsableArea(buildingDto.getUsableArea());
+        building.setStatus(Status.ACTIVATE);
+        building.setType(buildingDto.getBuildingType());
+        building.setQuantityOfFloor(buildingDto.getQuantityOfFloor());
+        building.setYearOfConstruction(buildingDto.getYearOfConstruction());
+        building.setAddress(buildingDto.getAddress());
+        repository.save(building);
+        Building buildId = repository.getByName(building.getName()).orElseThrow();
+        long id = buildId.getId();
+
+        //добавление link
+        LinkToMapDto link = buildingDto.getLink();
+
+        updateAddressLink(link,id);
+        return building;
     }
 
     private BuildingDto convertToBuildingModel(Building building){
@@ -178,25 +216,13 @@ public class BuildingService {
         return new DeletedDTO(id);
     }
 
-    public Building updateById(Long id,BuildingDto building){
-        Building build = repository.findById(id).orElseThrow(
+
+
+    public Building updateById(Long id,BuildingDto dto) {
+        Building building = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("здание с таким id не существует! id = ", id));
-        build.setStatus(Status.ACTIVATE);
-        build.setImage(building.getImage());
-        build.setDescription(building.getDescription());
-        build.setName(building.getName());
-        build.setYearOfConstruction(build.getYearOfConstruction());
-        build.setTotalArea(building.getTotalArea());
-        build.setUsableArea(building.getUsableArea());
-        build.setAddress(building.getAddress());
-        build.setQuantityOfFloor(building.getQuantityOfFloor());
-        repository.save(build);
-
-        return build;
+            return updater(building, dto);
     }
-
-
-
 
     public List<BuildingDto> getAllBuildingsByCategory(long id,Integer pageNo, Integer pageSize, String sortBy) {
         List<Building> buildingListFilteredByCategory = repository.findByCategory_Id(id);
