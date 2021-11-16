@@ -225,7 +225,7 @@ public class BuildingService {
     }
 
     public List<BuildingDto> getAllBuildingsByCategory(long id,Integer pageNo, Integer pageSize, String sortBy) {
-        List<Building> buildingListFilteredByCategory = repository.findByStatusAndCategory_Id(id,Status.ACTIVATE);
+        List<Building> buildingListFilteredByCategory = repository.findByStatusAndCategory_Id(Status.ACTIVATE,id);
         List<BuildingDto> buildingModelsList = new ArrayList<>();
 
         buildingListFilteredByCategory.forEach(building -> {

@@ -16,7 +16,7 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
 
     List<Building> findAllByStatus(Status status);
 
-    List<Building> findByStatusAndCategory_Id(Long id,Status status);
+    List<Building> findByStatusAndCategory_Id(Status status,Long id);
 
 
 
