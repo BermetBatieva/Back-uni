@@ -2,14 +2,14 @@ package com.example.Backuni.service;
 
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.DeletedDTO;
-import com.example.Backuni.entity.Building;
-import com.example.Backuni.entity.BuildingType;
-import com.example.Backuni.entity.Category;
-import com.example.Backuni.entity.Status;
+import com.example.Backuni.dto.LinkToMapDto;
+import com.example.Backuni.entity.*;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.exception.ResourceNotFoundException;
 import com.example.Backuni.repository.BuildingPaginationRepository;
 import com.example.Backuni.repository.BuildingRepository;
+import com.example.Backuni.repository.CategoryRepository;
+import com.example.Backuni.repository.LinkToMapRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,23 +31,81 @@ public class BuildingService {
     @Autowired
     private BuildingPaginationRepository buildingPaginationRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-    public Building addBuilding(BuildingDto dto) {
+    @Autowired
+    private LinkToMapRepository linkToMapRepository;
+
+
+
+
+    public Building addBuilding(BuildingDto dto) throws AlreadyExistException {
+        if (repository.existsByName(dto.getName())) {
+            throw new AlreadyExistException("Меню с таким именем уже существует!");
+        } else {
             Building building = new Building();
-            building.setAddress(dto.getAddress());
-            building.setTotalArea(dto.getTotalArea());
-            building.setUsableArea(dto.getUsableArea());
-            building.setYearOfConstruction(dto.getYearOfConstruction());
-            building.setDescription(dto.getDescription());
-            building.setName(dto.getName());
-            building.setType(dto.getBuildingType());
-            building.setImage(dto.getImage());
-            building.setStatus(Status.ACTIVATE);
-            building.setQuantityOfFloor(dto.getQuantityOfFloor());
-            building.setLink2gis(dto.getLink2gis());
-            repository.save(building);
-            return building;
+            return saver(building, dto);
+        }
     }
+
+
+    @Transactional
+    Building saver(Building building, BuildingDto buildingDto) {
+        building.setName(buildingDto.getName());
+        building.setCategory(categoryRepository.findById(buildingDto.getCategoryId())
+                .orElseThrow(() -> new ResourceNotFoundException("категория с такой id не найдено! id = ",
+                        buildingDto.getCategoryId())));
+        building.setDescription(buildingDto.getDescription());
+        building.setImage(buildingDto.getImage());
+        building.setTotalArea(buildingDto.getTotalArea());
+        building.setUsableArea(buildingDto.getUsableArea());
+        building.setStatus(Status.ACTIVATE);
+        building.setType(buildingDto.getBuildingType());
+        building.setQuantityOfFloor(buildingDto.getQuantityOfFloor());
+        building.setYearOfConstruction(buildingDto.getYearOfConstruction());
+        building.setAddress(buildingDto.getAddress());
+        repository.save(building);
+        Building buildId = repository.getByName(building.getName()).orElseThrow();
+        long id = buildId.getId();
+
+        //добавление link
+        LinkToMapDto link = buildingDto.getLink();
+
+        addAddressLink(link,id);
+        return building;
+    }
+
+    private  void addAddressLink(LinkToMapDto linkToMapDto, Long id){
+
+        LinkToMap linkToMap = new LinkToMap();
+
+        linkToMap.setLat(linkToMapDto.getLat());
+        linkToMap.setLon(linkToMap.getLon());
+        linkToMap.setBuilding(repository.getById(id));
+
+        linkToMapRepository.save(linkToMap);
+
+    }
+
+    private BuildingDto convertToBuildingModel(Building building){
+        BuildingDto buildingDto = new BuildingDto();
+
+        buildingDto.setId(building.getId());
+        buildingDto.setName(building.getName());
+        buildingDto.setAddress(building.getAddress());
+        buildingDto.setTotalArea(building.getTotalArea());
+        buildingDto.setUsableArea(building.getUsableArea());
+        buildingDto.setYearOfConstruction(building.getYearOfConstruction());
+        buildingDto.setImage(building.getImage());
+
+
+        buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
+
+        return buildingDto;
+    }
+
+
 
     public Page<BuildingDto> getAllBuildings(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
@@ -65,22 +123,6 @@ public class BuildingService {
         return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
 
-    private BuildingDto convertToBuildingModel(Building building){
-        BuildingDto buildingDto = new BuildingDto();
-
-        buildingDto.setId(building.getId());
-        buildingDto.setName(building.getName());
-        buildingDto.setAddress(building.getAddress());
-        buildingDto.setTotalArea(building.getTotalArea());
-        buildingDto.setUsableArea(building.getUsableArea());
-        buildingDto.setYearOfConstruction(building.getYearOfConstruction());
-        buildingDto.setImage(building.getImage());
-        buildingDto.setLink2gis(building.getLink2gis());
-        buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
-
-        return buildingDto;
-    }
-
     public List<Building> allBuilding() {
         List<Building> list = repository.getBuildingByStatus(Status.ACTIVATE);
         List<BuildingDto> result = new ArrayList<>();
@@ -94,7 +136,7 @@ public class BuildingService {
             model.setUsableArea(building.getUsableArea());
             model.setDescription(building.getDescription());
             model.setQuantityOfFloor(building.getQuantityOfFloor());
-            model.setLink2gis(building.getLink2gis());
+
             result.add(model);
         }
         return list;
@@ -110,7 +152,6 @@ public class BuildingService {
         buildingDto.setUsableArea(building.getUsableArea());
         buildingDto.setTotalArea(building.getTotalArea());
         buildingDto.setYearOfConstruction(building.getYearOfConstruction());
-        buildingDto.setLink2gis(building.getLink2gis());
         buildingDto.setDescription(building.getDescription());
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
         buildingDto.setAddress(building.getAddress());
@@ -148,7 +189,6 @@ public class BuildingService {
         build.setTotalArea(building.getTotalArea());
         build.setUsableArea(building.getUsableArea());
         build.setAddress(building.getAddress());
-        build.setLink2gis(building.getLink2gis());
         build.setQuantityOfFloor(building.getQuantityOfFloor());
         repository.save(build);
 

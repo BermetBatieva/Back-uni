@@ -104,8 +104,7 @@ public class CabinetService {
     }
 
 
-
-        private CabinetDto convertToBuildingModel(Cabinet cabinet){
+    private CabinetDto convertToBuildingModel(Cabinet cabinet){
             CabinetDto cabinetDto = new CabinetDto();
 
             cabinetDto.setId(cabinet.getId());
@@ -132,7 +131,4 @@ public class CabinetService {
 
         return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
-
-
-
 }

@@ -1,6 +1,7 @@
 package com.example.Backuni.dto;
 
 import com.example.Backuni.entity.BuildingType;
+import com.example.Backuni.entity.LinkToMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ public class BuildingDto {
 
     private String address;
 
-    private String link2gis;
+    private LinkToMapDto link;
 
     private String description;
 
@@ -31,6 +32,8 @@ public class BuildingDto {
     private Long yearOfConstruction;
 
     private BuildingType buildingType;
+
+    private Long categoryId;
 
 
 }

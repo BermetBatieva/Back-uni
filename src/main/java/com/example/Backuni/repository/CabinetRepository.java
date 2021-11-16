@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface CabinetRepository extends JpaRepository<Cabinet,Long> {
 
-    boolean existsByNumber(Long n);
+    boolean existsByNumberAndBuilding_id(Long n,long id);
 
     List<Cabinet> findByBuilding_IdAndFloorNumberAndStatus(Long buildingId, Integer floorNum, Status status);
 

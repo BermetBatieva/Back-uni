@@ -26,9 +26,6 @@ public class Building {
 
     private byte[] image;
 
-    @Column(name = "link_2_gis")
-    private String link2gis;
-
     @Column(name = "quantity_of_floor")
     private Integer quantityOfFloor;//5
 
@@ -51,5 +48,4 @@ public class Building {
 
     @Enumerated(EnumType.STRING)
     private BuildingType type;
-
 }

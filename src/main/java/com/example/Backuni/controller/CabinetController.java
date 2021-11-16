@@ -29,7 +29,7 @@ public class CabinetController {
     @ApiOperation(value = "Добавление кабинета")
     @PostMapping("/add")
     public ResponseEntity<Cabinet> create(@RequestBody CabinetDto cabinetDto) {
-        if(!repository.existsByNumber(cabinetDto.getNumber())) {
+        if(!repository.existsByNumberAndBuilding_id(cabinetDto.getNumber(),cabinetDto.getBuildingId())) {
             return new ResponseEntity<>(cabinetService.add(cabinetDto), HttpStatus.OK);
         }else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
