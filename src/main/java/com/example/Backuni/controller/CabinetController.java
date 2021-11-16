@@ -59,12 +59,13 @@ public class CabinetController {
         return new ResponseEntity<>(cabinetService.updateById(id,model),HttpStatus.OK);
     }
 
-    @ApiOperation("получение всех кабинетов с пагинацией")
-    @GetMapping("/get-all-building-pagination")
-    public Page<CabinetDto> getAllCabinetForWeb(@RequestParam(defaultValue = "1") Integer pageNo,
+    @ApiOperation("получение всех кабинетов по зданию и этажу с пагинацией")
+    @PostMapping("/get-all-cabinet-pagination")
+    public Page<CabinetDto> getAllCabinetForWeb(@RequestBody CabinetsByBuildingIdAndFloorNum c,
+                                                @RequestParam(defaultValue = "1") Integer pageNo,
                                                   @RequestParam(defaultValue = "10") Integer pageSize,
                                                   @RequestParam(defaultValue = "id") String sortBy){
-        return cabinetService.getAllCabinets(pageNo,pageSize,sortBy);
+        return cabinetService.getAllCabinets(c.getBuildingId(),c.getFloorNum(),pageNo,pageSize,sortBy);
     }
 
 }

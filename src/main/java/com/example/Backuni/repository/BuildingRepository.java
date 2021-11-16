@@ -14,9 +14,11 @@ import java.util.Optional;
 public interface BuildingRepository extends JpaRepository<Building, Long> {
     boolean existsBuildingByName(String name);
 
-    List<Building> getBuildingByStatus(Status status);
+    List<Building> findAllByStatus(Status status);
 
-    List<Building> findByCategory_Id(Long id);
+    List<Building> findByStatusAndCategory_Id(Long id,Status status);
+
+
 
 
     boolean existsByName(String name);

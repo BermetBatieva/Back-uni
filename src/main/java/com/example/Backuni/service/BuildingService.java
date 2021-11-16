@@ -148,7 +148,7 @@ public class BuildingService {
     public Page<BuildingDto> getAllBuildings(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-        List<Building> buildingList = repository.findAll();
+        List<Building> buildingList = repository.findAllByStatus(Status.ACTIVATE);
         Page<Building> buildingPage = buildingPaginationRepository.findAll(pageable);
         List<BuildingDto> transactionModelList = new ArrayList<>();
 
@@ -162,7 +162,7 @@ public class BuildingService {
     }
 
     public List<Building> allBuilding() {
-        List<Building> list = repository.getBuildingByStatus(Status.ACTIVATE);
+        List<Building> list = repository.findAllByStatus(Status.ACTIVATE);
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
@@ -225,7 +225,7 @@ public class BuildingService {
     }
 
     public List<BuildingDto> getAllBuildingsByCategory(long id,Integer pageNo, Integer pageSize, String sortBy) {
-        List<Building> buildingListFilteredByCategory = repository.findByCategory_Id(id);
+        List<Building> buildingListFilteredByCategory = repository.findByStatusAndCategory_Id(id,Status.ACTIVATE);
         List<BuildingDto> buildingModelsList = new ArrayList<>();
 
         buildingListFilteredByCategory.forEach(building -> {

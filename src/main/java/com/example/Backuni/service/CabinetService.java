@@ -69,13 +69,14 @@ public class CabinetService {
     }
 
     public CabinetDto getById(Long id){
-        Optional<Cabinet> cabinet = cabinetRepository.findById(id);
+        Cabinet cabinet = cabinetRepository.findById(id).orElseThrow(()->
+                new ResourceNotFoundException("нет кабинета с таким id = ",id));
         CabinetDto cabinetDto = new CabinetDto();
-        cabinetDto.setName(cabinet.get().getName());
-        cabinetDto.setFloorNumber(cabinet.get().getFloorNumber());
-        cabinetDto.setImage(cabinet.get().getImage());
-        cabinetDto.setDescription(cabinet.get().getDescription());
-        cabinetDto.setNumber(cabinet.get().getNumber());
+        cabinetDto.setName(cabinet.getName());
+        cabinetDto.setFloorNumber(cabinet.getFloorNumber());
+        cabinetDto.setImage(cabinet.getImage());
+        cabinetDto.setDescription(cabinet.getDescription());
+        cabinetDto.setNumber(cabinet.getNumber());
         return cabinetDto;
     }
 
@@ -116,10 +117,10 @@ public class CabinetService {
             return cabinetDto;
         }
 
-    public Page<CabinetDto> getAllCabinets(Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<CabinetDto> getAllCabinets(Long buildId,Integer floorNum,Integer pageNo, Integer pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-        List<Cabinet> buildingList = cabinetRepository.findAll();
+        List<Cabinet> buildingList = cabinetRepository.findByBuilding_IdAndFloorNumberAndStatus(buildId,floorNum,Status.ACTIVATE);
         Page<Cabinet> buildingPage = cabinetPaginationRepository.findAll(pageable);
         List<CabinetDto> transactionModelList = new ArrayList<>();
 
