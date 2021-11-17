@@ -1,6 +1,7 @@
 package com.example.Backuni.service;
 
 import com.example.Backuni.dto.BuildingDto;
+import com.example.Backuni.dto.CabinetDto;
 import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.dto.LinkToMapDto;
 import com.example.Backuni.entity.*;
@@ -140,7 +141,6 @@ public class BuildingService {
         buildingDto.setYearOfConstruction(building.getYearOfConstruction());
         buildingDto.setImage(building.getImage());
 
-
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
 
         return buildingDto;
@@ -227,17 +227,21 @@ public class BuildingService {
             return updater(building, dto);
     }
 
-    public List<BuildingDto> getAllBuildingsByCategory(long id,Integer pageNo, Integer pageSize, String sortBy) {
-        List<Building> buildingListFilteredByCategory = repository.findByStatusAndCategory_Id(Status.ACTIVATE,id);
-        List<BuildingDto> buildingModelsList = new ArrayList<>();
 
-        buildingListFilteredByCategory.forEach(building -> {
-            BuildingDto buildingDto = convertToBuildingModel(building);
+    public Page<BuildingDto> getAllBuildingsByCategory(Long id,Integer pageNo, Integer pageSize, String sortBy) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-            buildingModelsList.add(buildingDto);
+        List<Building> buildingList = repository.findByStatusAndCategory_Id(Status.ACTIVATE,id);
+        Page<Building> buildingPage = buildingPaginationRepository.findAll(pageable);
+        List<BuildingDto> transactionModelList = new ArrayList<>();
+
+        buildingPage.forEach(building -> {
+            BuildingDto model = convertToBuildingModel(building);
+
+            transactionModelList.add(model);
         });
 
-        return buildingModelsList;
+        return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
 
 }

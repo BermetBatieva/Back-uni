@@ -15,6 +15,7 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
     boolean existsBuildingByNameAndStatus(String name,Status status);
 
     List<Building> findAllByStatus(Status status);
+    
 
     List<Building> findByStatusAndCategory_Id(Status status,Long id);
 

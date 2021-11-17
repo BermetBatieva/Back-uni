@@ -3,7 +3,6 @@ package com.example.Backuni.controller;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.entity.Building;
-import com.example.Backuni.entity.Status;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.repository.BuildingRepository;
 import com.example.Backuni.service.BuildingService;
@@ -50,7 +49,7 @@ public class BuildingController {
 
     @ApiOperation("получение всех зданий по категории пагинация")
     @GetMapping("get-all-building-by-category-and-type/{categoryId}")
-    public List<BuildingDto> getAllBuildingByCategoryId(@PathVariable Long categoryId,
+    public Page<BuildingDto> getAllBuildingByCategoryId(@PathVariable Long categoryId,
                                                      @RequestParam(defaultValue = "1") Integer pageNo,
                                                      @RequestParam(defaultValue = "10") Integer pageSize,
                                                      @RequestParam(defaultValue = "id") String sortBy){
