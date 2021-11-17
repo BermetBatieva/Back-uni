@@ -131,6 +131,9 @@ public class BuildingService {
 
         buildingDto.setId(building.getId());
         buildingDto.setName(building.getName());
+        buildingDto.setBuildingType(building.getType());
+        buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
+        buildingDto.setCategoryId(building.getCategory().getId());
         buildingDto.setAddress(building.getAddress());
         buildingDto.setTotalArea(building.getTotalArea());
         buildingDto.setUsableArea(building.getUsableArea());
