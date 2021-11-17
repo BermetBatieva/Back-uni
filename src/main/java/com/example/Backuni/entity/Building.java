@@ -18,14 +18,16 @@ public class Building {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     private String name; //наименование организации
 
     private String address;
 
     private String description;
 
-    private byte[] image;
+
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 
     @Column(name = "quantity_of_floor")
     private Integer quantityOfFloor;//5
@@ -42,7 +44,6 @@ public class Building {
 
     @ManyToOne
     private  Category category;
-
 
     @Enumerated(EnumType.STRING)
     private Status status;

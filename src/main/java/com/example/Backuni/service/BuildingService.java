@@ -1,5 +1,7 @@
 package com.example.Backuni.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.CabinetDto;
 import com.example.Backuni.dto.DeletedDTO;
@@ -7,20 +9,22 @@ import com.example.Backuni.dto.LinkToMapDto;
 import com.example.Backuni.entity.*;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.exception.ResourceNotFoundException;
-import com.example.Backuni.repository.BuildingPaginationRepository;
-import com.example.Backuni.repository.BuildingRepository;
-import com.example.Backuni.repository.CategoryRepository;
-import com.example.Backuni.repository.LinkToMapRepository;
+import com.example.Backuni.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.*;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+
+import java.io.IOException;
+import java.util.*;
 
 
 @Service
@@ -37,6 +41,9 @@ public class BuildingService {
 
     @Autowired
     private LinkToMapRepository linkToMapRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
 
 
@@ -58,7 +65,6 @@ public class BuildingService {
                 .orElseThrow(() -> new ResourceNotFoundException("категория с такой id не найдено! id = ",
                         buildingDto.getCategoryId())));
         building.setDescription(buildingDto.getDescription());
-        building.setImage(buildingDto.getImage());
         building.setTotalArea(buildingDto.getTotalArea());
         building.setUsableArea(buildingDto.getUsableArea());
         building.setStatus(Status.ACTIVATE);
@@ -108,7 +114,6 @@ public class BuildingService {
                 .orElseThrow(() -> new ResourceNotFoundException("категория с такой id не найдено! id = ",
                         buildingDto.getCategoryId())));
         building.setDescription(buildingDto.getDescription());
-        building.setImage(buildingDto.getImage());
         building.setTotalArea(buildingDto.getTotalArea());
         building.setUsableArea(buildingDto.getUsableArea());
         building.setStatus(Status.ACTIVATE);
@@ -139,7 +144,7 @@ public class BuildingService {
         buildingDto.setTotalArea(building.getTotalArea());
         buildingDto.setUsableArea(building.getUsableArea());
         buildingDto.setYearOfConstruction(building.getYearOfConstruction());
-        buildingDto.setImage(building.getImage());
+        buildingDto.setImageLink(building.getImage().getUrl());
 
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
 
@@ -169,7 +174,7 @@ public class BuildingService {
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
-            model.setImage(building.getImage());
+            model.setImageLink(building.getImage().getUrl());
             model.setName(building.getName());
             model.setAddress(building.getAddress());
             model.setYearOfConstruction(building.getYearOfConstruction());
@@ -196,7 +201,7 @@ public class BuildingService {
         buildingDto.setDescription(building.getDescription());
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
         buildingDto.setAddress(building.getAddress());
-        buildingDto.setImage(building.getImage());
+        buildingDto.setImageLink(building.getImage().getUrl());
         return buildingDto;
     }
 
@@ -249,7 +254,7 @@ public class BuildingService {
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
-            model.setImage(building.getImage());
+            model.setImageLink(building.getImage().getUrl());
             model.setCategoryId(building.getCategory().getId());
             model.setBuildingType(building.getType());
             model.setId(building.getId());
@@ -264,6 +269,36 @@ public class BuildingService {
             result.add(model);
         }
         return result;
+    }
+
+
+    public ResponseEntity<Building> setImage(MultipartFile multipartFile, Long buildId) throws IOException {
+        final String urlKey = "cloudinary://513184318945249:-PXAzPrMMtx1J7NCL1afdr59new@neobis/";
+        Image image = new Image();
+        File file;
+        try{
+            file = Files.createTempFile(System.currentTimeMillis() + "",
+                            Objects.requireNonNull(multipartFile.getOriginalFilename()).substring(multipartFile.getOriginalFilename().length()-4))
+                    .toFile();
+            multipartFile.transferTo(file);
+
+            Cloudinary cloudinary = new Cloudinary(urlKey);
+            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+            image.setName((String) uploadResult.get("public_id"));
+            image.setUrl((String) uploadResult.get("url"));
+            image.setFormat((String) uploadResult.get("format"));
+            imageRepository.save(image);
+
+            Building building= repository.findById(buildId).orElseThrow(
+                    () -> new ResourceNotFoundException("нет здания с таким id = ",buildId));
+            building.setImage(image);
+            repository.save(building);
+
+
+            return ResponseEntity.ok().body(building);
+        }catch (IOException e){
+            throw new IOException("failed to install image");
+        }
     }
 
 }

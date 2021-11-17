@@ -21,7 +21,7 @@ public class BuildingDto {
 
     private String description;
 
-    private byte[] image;
+    private String imageLink;
 
     private Integer quantityOfFloor;
 

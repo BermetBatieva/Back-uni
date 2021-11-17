@@ -12,7 +12,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin
@@ -26,6 +28,14 @@ public class BuildingController {
     @Autowired
     private BuildingRepository repository;
 
+
+
+
+    @PutMapping("/image/{buildId}")
+    public ResponseEntity<Building> setImage(@RequestParam(name = "file") MultipartFile multipartFile, //больше одного RequestParam нельзя, когда MultipartFile
+                                            @PathVariable Long buildId) throws IOException, IOException {
+        return service.setImage(multipartFile,buildId);
+    }
 
     @ApiOperation("получение всех зданий с пагинацией")
     @GetMapping("/get-all-building-pagination")
