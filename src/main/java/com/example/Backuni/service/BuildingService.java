@@ -244,4 +244,26 @@ public class BuildingService {
         return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
 
+    public List<BuildingDto> getByCategoryId(Long id){
+        List<Building> list = repository.findByStatusAndCategory_Id(Status.ACTIVATE,id);
+        List<BuildingDto> result = new ArrayList<>();
+        for (Building building : list) {
+            BuildingDto model = new BuildingDto();
+            model.setImage(building.getImage());
+            model.setCategoryId(building.getCategory().getId());
+            model.setBuildingType(building.getType());
+            model.setId(building.getId());
+            model.setName(building.getName());
+            model.setAddress(building.getAddress());
+            model.setYearOfConstruction(building.getYearOfConstruction());
+            model.setTotalArea(building.getTotalArea());
+            model.setUsableArea(building.getUsableArea());
+            model.setDescription(building.getDescription());
+            model.setQuantityOfFloor(building.getQuantityOfFloor());
+
+            result.add(model);
+        }
+        return result;
+    }
+
 }

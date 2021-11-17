@@ -49,11 +49,8 @@ public class BuildingController {
 
     @ApiOperation("получение всех зданий по категории пагинация")
     @GetMapping("get-all-building-by-category-and-type/{categoryId}")
-    public Page<BuildingDto> getAllBuildingByCategoryId(@PathVariable Long categoryId,
-                                                     @RequestParam(defaultValue = "1") Integer pageNo,
-                                                     @RequestParam(defaultValue = "10") Integer pageSize,
-                                                     @RequestParam(defaultValue = "id") String sortBy){
-        return service.getAllBuildingsByCategory(categoryId,pageNo,pageSize,sortBy);
+    public List<BuildingDto> getAllBuildingByCategoryId(@PathVariable Long categoryId){
+        return service.getByCategoryId(categoryId);
     }
 
     @GetMapping("get-by-id/{id}")
