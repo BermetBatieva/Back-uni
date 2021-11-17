@@ -3,6 +3,7 @@ package com.example.Backuni.controller;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.entity.Building;
+import com.example.Backuni.entity.Status;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.repository.BuildingRepository;
 import com.example.Backuni.service.BuildingService;
@@ -37,11 +38,7 @@ public class BuildingController {
 
     @PostMapping("add")
     public ResponseEntity<Building> addNewBuilding(@RequestBody BuildingDto model) throws AlreadyExistException {
-        if(!repository.existsBuildingByName(model.getName())) {
             return new ResponseEntity<>( service.addBuilding(model), HttpStatus.OK);
-        }else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
     }
 
 

@@ -41,7 +41,7 @@ public class BuildingService {
 
 
     public Building addBuilding(BuildingDto dto) throws AlreadyExistException {
-        if (repository.existsByName(dto.getName())) {
+        if (repository.existsBuildingByNameAndStatus(dto.getName(), Status.ACTIVATE)) {
             throw new AlreadyExistException("здание с таким именем уже существует!");
         } else {
             Building building = new Building();
