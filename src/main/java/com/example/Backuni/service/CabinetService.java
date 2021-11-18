@@ -70,7 +70,14 @@ public class CabinetService {
         for(Cabinet cabinet : cabinets){
             ListCabinets model = new ListCabinets();
             model.setId(cabinet.getId());
-//            model.setImage(cabinet.getImage());
+
+            List<String> url = new ArrayList<>();
+            List<Image> imageList = imageRepository.findByBuilding_IdAndCabinet_Id
+                    (cabinet.getBuilding().getId(),cabinet.getId());
+            for(Image i : imageList ){
+                url.add(i.getUrl());
+            }
+            model.setUrl(url);
             model.setNumber(cabinet.getNumber());
             model.setDescription(cabinet.getDescription());
             result.add(model);

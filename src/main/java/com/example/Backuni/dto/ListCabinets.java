@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -16,5 +18,5 @@ public class ListCabinets {
 
     private String description;
 
-    private byte[] image;
+    private List<String> url;
 }
