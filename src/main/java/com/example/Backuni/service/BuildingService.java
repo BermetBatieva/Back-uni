@@ -169,13 +169,19 @@ public class BuildingService {
         return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
 
-    public List<Building> allBuilding() {
+    public List<BuildingDto> allBuilding() {
         List<Building> list = repository.findAllByStatus(Status.ACTIVATE);
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
-//            model.setImageLink(building.getImage().getUrl());
+            model.setId(building.getId());
             model.setName(building.getName());
+            List<String>  url = new ArrayList<>();
+            List<Image> imageList = imageRepository.findAllByBuilding_id(building.getId());
+            for(Image i : imageList ){
+                url.add(i.getUrl());
+            }
+            model.setImageLink(url);
             model.setAddress(building.getAddress());
             model.setYearOfConstruction(building.getYearOfConstruction());
             model.setTotalArea(building.getTotalArea());
@@ -185,7 +191,7 @@ public class BuildingService {
 
             result.add(model);
         }
-        return list;
+        return result;
     }
 
     public BuildingDto getById(Long id) {
