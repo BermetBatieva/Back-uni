@@ -177,7 +177,7 @@ public class BuildingService {
             model.setId(building.getId());
             model.setName(building.getName());
             List<String>  url = new ArrayList<>();
-            List<Image> imageList = imageRepository.findAllByBuilding_id(building.getId());
+            List<Image> imageList = imageRepository.findByBuilding_id(building.getId());
             for(Image i : imageList ){
                 url.add(i.getUrl());
             }
@@ -209,7 +209,7 @@ public class BuildingService {
         buildingDto.setAddress(building.getAddress());
 
         List<String>  url = new ArrayList<>();
-        List<Image> imageList = imageRepository.findAllByBuilding_id(id);
+        List<Image> imageList = imageRepository.findByBuilding_id(id);
 
         for(Image i : imageList ){
             url.add(i.getUrl());
@@ -267,7 +267,7 @@ public class BuildingService {
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
             List<String>  url = new ArrayList<>();
-            List<Image> imageList = imageRepository.findAllByBuilding_id(building.getId());
+            List<Image> imageList = imageRepository.findByBuilding_id(building.getId());
 
             for(Image i : imageList ){
                 url.add(i.getUrl());
