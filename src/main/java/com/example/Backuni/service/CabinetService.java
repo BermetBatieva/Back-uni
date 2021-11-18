@@ -1,22 +1,29 @@
 package com.example.Backuni.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.Backuni.dto.*;
 import com.example.Backuni.entity.Building;
 import com.example.Backuni.entity.Cabinet;
+import com.example.Backuni.entity.Image;
 import com.example.Backuni.entity.Status;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.exception.ResourceNotFoundException;
 import com.example.Backuni.repository.BuildingRepository;
 import com.example.Backuni.repository.CabinetPaginationRepository;
 import com.example.Backuni.repository.CabinetRepository;
+import com.example.Backuni.repository.ImageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
 
 @Service
 public class CabinetService {
@@ -29,6 +36,9 @@ public class CabinetService {
 
     @Autowired
     private BuildingRepository buildingRepository;
+
+    @Autowired
+    private ImageRepository imageRepository;
 
 
 
@@ -132,4 +142,44 @@ public class CabinetService {
 
         return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
+
+
+    public ResponseEntity<Cabinet> setImage(MultipartFile[] files, Long cabinetId,Long idBuild) throws IOException {
+        final String urlKey = "cloudinary://513184318945249:-PXAzPrMMtx1J7NCL1afdr59new@neobis/";
+        List<Image> images = new ArrayList<>();
+        Cabinet cabinet = cabinetRepository.findByIdAndBuilding_Id(cabinetId,idBuild);
+        Arrays.asList(files).forEach(file -> {
+
+            File file1;
+            try {
+                file1 = Files.createTempFile(System.currentTimeMillis() + "",
+                                Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length() - 4))
+                        .toFile();
+                file.transferTo(file1);
+
+                Cloudinary cloudinary = new Cloudinary(urlKey);
+                Map uploadResult = cloudinary.uploader().upload(file1, ObjectUtils.emptyMap());
+
+                Image image = new Image();
+                image.setCabinet(cabinet);
+                image.setName((String) uploadResult.get("public_id"));
+                image.setUrl((String) uploadResult.get("url"));
+                image.setFormat((String) uploadResult.get("format"));
+
+                images.add(imageRepository.save(image));
+
+
+
+            } catch (IOException e) {
+                try {
+                    throw new IOException("failed to install image");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        return ResponseEntity.ok().body(cabinet);
+    }
+
+
 }

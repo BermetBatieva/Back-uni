@@ -3,6 +3,7 @@ package com.example.Backuni.controller;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.DeletedDTO;
 import com.example.Backuni.entity.Building;
+import com.example.Backuni.entity.Image;
 import com.example.Backuni.exception.AlreadyExistException;
 import com.example.Backuni.repository.BuildingRepository;
 import com.example.Backuni.service.BuildingService;
@@ -85,5 +86,10 @@ public class BuildingController {
     @PutMapping("edit/{id}")
     public ResponseEntity<Building> update(@PathVariable Long id,@RequestBody BuildingDto model) {
         return new ResponseEntity<>(service.updateById(id,model),HttpStatus.OK);
+    }
+
+    @PostMapping("delete/{id}")
+    public  ResponseEntity<Image> deleteImage(@PathVariable Long id){
+        return  new ResponseEntity<>(service.deleteImage(id),HttpStatus.OK);
     }
 }

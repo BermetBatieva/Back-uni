@@ -18,5 +18,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet,Long> {
 
     List<Cabinet> findAllByBuilding_idAndStatus(Long id,Status status);
 
+    Cabinet findByIdAndBuilding_Id(Long id, Long bId);
+
 
 }
