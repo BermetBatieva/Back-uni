@@ -267,7 +267,7 @@ public class BuildingService {
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
             List<String>  url = new ArrayList<>();
-            List<Image> imageList = imageRepository.findAllByBuilding_id(id);
+            List<Image> imageList = imageRepository.findAllByBuilding_id(building.getId());
 
             for(Image i : imageList ){
                 url.add(i.getUrl());
