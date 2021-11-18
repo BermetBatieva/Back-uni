@@ -285,9 +285,12 @@ public class BuildingService {
     public ResponseEntity<Building> setImage(MultipartFile[] files, Long buildId) throws IOException {
         final String urlKey = "cloudinary://513184318945249:-PXAzPrMMtx1J7NCL1afdr59new@neobis/";
         List<Image> images = new ArrayList<>();
-        Building building = repository.findById(buildId).orElseThrow();
+        Building building = repository.findById(buildId).orElseThrow(
+                ()-> new ResourceNotFoundException("нет здания с таким id = ", buildId)
+        );
 
         Arrays.asList(files).forEach(file -> {
+
             File file1;
             try {
                 file1 = Files.createTempFile(System.currentTimeMillis() + "",
