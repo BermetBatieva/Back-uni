@@ -46,8 +46,6 @@ public class BuildingService {
     private ImageRepository imageRepository;
 
 
-
-
     public Building addBuilding(BuildingDto dto) throws AlreadyExistException {
         if (repository.existsBuildingByNameAndStatus(dto.getName(), Status.ACTIVATE)) {
             throw new AlreadyExistException("здание с таким именем уже существует!");
@@ -62,7 +60,8 @@ public class BuildingService {
     Building saver(Building building, BuildingDto buildingDto) {
         building.setName(buildingDto.getName());
         building.setCategory(categoryRepository.findById(buildingDto.getCategoryId())
-                .orElseThrow(() -> new ResourceNotFoundException("категория с такой id не найдено! id = ",
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("категория с такой id не найдено! id = ",
                         buildingDto.getCategoryId())));
         building.setDescription(buildingDto.getDescription());
         building.setTotalArea(buildingDto.getTotalArea());
@@ -79,11 +78,11 @@ public class BuildingService {
         //добавление link
         LinkToMapDto link = buildingDto.getLink();
 
-        addAddressLink(link,id);
+        addAddressLink(link, id);
         return building;
     }
 
-    private  void updateAddressLink(LinkToMapDto linkToMapDto, Long id){
+    private void updateAddressLink(LinkToMapDto linkToMapDto, Long id) {
 
         LinkToMap linkToMap = linkToMapRepository.findByBuilding_Id(id);
 
@@ -95,7 +94,7 @@ public class BuildingService {
 
     }
 
-    private  void addAddressLink(LinkToMapDto linkToMapDto, Long id){
+    private void addAddressLink(LinkToMapDto linkToMapDto, Long id) {
 
         LinkToMap linkToMap = new LinkToMap();
 
@@ -128,11 +127,11 @@ public class BuildingService {
         //добавление link
         LinkToMapDto link = buildingDto.getLink();
 
-        updateAddressLink(link,id);
+        updateAddressLink(link, id);
         return building;
     }
 
-    private BuildingDto convertToBuildingModel(Building building){
+    private BuildingDto convertToBuildingModel(Building building) {
         BuildingDto buildingDto = new BuildingDto();
 
         buildingDto.setId(building.getId());
@@ -144,13 +143,12 @@ public class BuildingService {
         buildingDto.setTotalArea(building.getTotalArea());
         buildingDto.setUsableArea(building.getUsableArea());
         buildingDto.setYearOfConstruction(building.getYearOfConstruction());
-        buildingDto.setImageLink(building.getImage().getUrl());
+//        buildingDto.setImageLink(building.getImage().getUrl());
 
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
 
         return buildingDto;
     }
-
 
 
     public Page<BuildingDto> getAllBuildings(Integer pageNo, Integer pageSize, String sortBy) {
@@ -174,7 +172,7 @@ public class BuildingService {
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
-            model.setImageLink(building.getImage().getUrl());
+//            model.setImageLink(building.getImage().getUrl());
             model.setName(building.getName());
             model.setAddress(building.getAddress());
             model.setYearOfConstruction(building.getYearOfConstruction());
@@ -188,7 +186,7 @@ public class BuildingService {
         return list;
     }
 
-    public BuildingDto getById(Long id){
+    public BuildingDto getById(Long id) {
         Building building = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("здание с таким id не существует! id = ", id));
         BuildingDto buildingDto = new BuildingDto();
@@ -201,15 +199,22 @@ public class BuildingService {
         buildingDto.setDescription(building.getDescription());
         buildingDto.setQuantityOfFloor(building.getQuantityOfFloor());
         buildingDto.setAddress(building.getAddress());
-        buildingDto.setImageLink(building.getImage().getUrl());
+
+        List<String>  url = new ArrayList<>();
+        List<Image> imageList = imageRepository.findAllByBuilding_id(id);
+
+        for(Image i : imageList ){
+            url.add(i.getUrl());
+        }
+        buildingDto.setImageLink(url);
         return buildingDto;
     }
 
-    public List<Integer> getAllFloor(Long id){
+    public List<Integer> getAllFloor(Long id) {
         Optional<Building> building = repository.findById(id);
         List<Integer> floors = new ArrayList<>();
 
-        for(int i = 1; i <= building.get().getQuantityOfFloor();i++){
+        for (int i = 1; i <= building.get().getQuantityOfFloor(); i++) {
             floors.add(i);
         }
         return floors;
@@ -225,18 +230,17 @@ public class BuildingService {
     }
 
 
-
-    public Building updateById(Long id,BuildingDto dto) {
+    public Building updateById(Long id, BuildingDto dto) {
         Building building = repository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("здание с таким id не существует! id = ", id));
-            return updater(building, dto);
+        return updater(building, dto);
     }
 
 
-    public Page<BuildingDto> getAllBuildingsByCategory(Long id,Integer pageNo, Integer pageSize, String sortBy) {
+    public Page<BuildingDto> getAllBuildingsByCategory(Long id, Integer pageNo, Integer pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
-        List<Building> buildingList = repository.findByStatusAndCategory_Id(Status.ACTIVATE,id);
+        List<Building> buildingList = repository.findByStatusAndCategory_Id(Status.ACTIVATE, id);
         Page<Building> buildingPage = buildingPaginationRepository.findAll(pageable);
         List<BuildingDto> transactionModelList = new ArrayList<>();
 
@@ -249,12 +253,18 @@ public class BuildingService {
         return new PageImpl<>(transactionModelList, PageRequest.of(pageNo, pageSize, Sort.by(sortBy)), buildingList.size());
     }
 
-    public List<BuildingDto> getByCategoryId(Long id){
-        List<Building> list = repository.findByStatusAndCategory_Id(Status.ACTIVATE,id);
+    public List<BuildingDto> getByCategoryId(Long id) {
+        List<Building> list = repository.findByStatusAndCategory_Id(Status.ACTIVATE, id);
         List<BuildingDto> result = new ArrayList<>();
         for (Building building : list) {
             BuildingDto model = new BuildingDto();
-            model.setImageLink(building.getImage().getUrl());
+            List<String>  url = new ArrayList<>();
+            List<Image> imageList = imageRepository.findAllByBuilding_id(id);
+
+            for(Image i : imageList ){
+                url.add(i.getUrl());
+            }
+            model.setImageLink(url);
             model.setCategoryId(building.getCategory().getId());
             model.setBuildingType(building.getType());
             model.setId(building.getId());
@@ -272,33 +282,40 @@ public class BuildingService {
     }
 
 
-    public ResponseEntity<Building> setImage(MultipartFile multipartFile, Long buildId) throws IOException {
+    public ResponseEntity<Building> setImage(MultipartFile[] files, Long buildId) throws IOException {
         final String urlKey = "cloudinary://513184318945249:-PXAzPrMMtx1J7NCL1afdr59new@neobis/";
-        Image image = new Image();
-        File file;
-        try{
-            file = Files.createTempFile(System.currentTimeMillis() + "",
-                            Objects.requireNonNull(multipartFile.getOriginalFilename()).substring(multipartFile.getOriginalFilename().length()-4))
-                    .toFile();
-            multipartFile.transferTo(file);
+        List<Image> images = new ArrayList<>();
+        Building building = repository.findById(buildId).orElseThrow();
 
-            Cloudinary cloudinary = new Cloudinary(urlKey);
-            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-            image.setName((String) uploadResult.get("public_id"));
-            image.setUrl((String) uploadResult.get("url"));
-            image.setFormat((String) uploadResult.get("format"));
-            imageRepository.save(image);
+        Arrays.asList(files).forEach(file -> {
+            File file1;
+            try {
+                file1 = Files.createTempFile(System.currentTimeMillis() + "",
+                                Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length() - 4))
+                        .toFile();
+                file.transferTo(file1);
 
-            Building building= repository.findById(buildId).orElseThrow(
-                    () -> new ResourceNotFoundException("нет здания с таким id = ",buildId));
-            building.setImage(image);
-            repository.save(building);
+                Cloudinary cloudinary = new Cloudinary(urlKey);
+                Map uploadResult = cloudinary.uploader().upload(file1, ObjectUtils.emptyMap());
+
+                Image image = new Image();
+                image.setBuilding(building);
+                image.setName((String) uploadResult.get("public_id"));
+                image.setUrl((String) uploadResult.get("url"));
+                image.setFormat((String) uploadResult.get("format"));
+
+                images.add(imageRepository.save(image));
 
 
-            return ResponseEntity.ok().body(building);
-        }catch (IOException e){
-            throw new IOException("failed to install image");
-        }
+
+            } catch (IOException e) {
+                try {
+                    throw new IOException("failed to install image");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        return ResponseEntity.ok().body(building);
     }
-
 }

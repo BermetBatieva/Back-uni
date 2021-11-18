@@ -22,6 +22,7 @@ public interface BuildingRepository extends JpaRepository<Building, Long> {
 
 
 
+
     boolean existsByName(String name);
 
     Optional<Building> getByName(String name);

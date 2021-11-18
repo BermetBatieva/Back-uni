@@ -23,8 +23,6 @@ public class Cabinet {
 
     private String name;
 
-    private byte[] image;
-
     private String description;
 
     @Column(name = "floor_number")
@@ -35,6 +33,8 @@ public class Cabinet {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+
 
 
 }

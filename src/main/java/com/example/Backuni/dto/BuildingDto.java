@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -21,7 +23,7 @@ public class BuildingDto {
 
     private String description;
 
-    private String imageLink;
+    private List<String> imageLink;
 
     private Integer quantityOfFloor;
 

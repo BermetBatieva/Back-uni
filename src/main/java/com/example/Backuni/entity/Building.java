@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -25,9 +26,6 @@ public class Building {
     private String description;
 
 
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    private Image image;
 
     @Column(name = "quantity_of_floor")
     private Integer quantityOfFloor;//5

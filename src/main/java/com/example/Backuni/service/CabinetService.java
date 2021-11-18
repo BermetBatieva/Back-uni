@@ -44,9 +44,9 @@ public class CabinetService {
         cabinet.setStatus(Status.ACTIVATE);
         cabinet.setNumber(cabinetDto.getNumber());
         cabinet.setDescription(cabinetDto.getDescription());
-        cabinet.setImage(cabinetDto.getImage());
+//        cabinet.setImage(cabinetDto.getImage());
         cabinet.setFloorNumber(cabinetDto.getFloorNumber());
-        cabinet.setImage(cabinetDto.getImage());
+//        cabinet.setImage(cabinetDto.getImage());
         cabinetRepository.save(cabinet);
         return cabinet;
     }
@@ -60,7 +60,7 @@ public class CabinetService {
         for(Cabinet cabinet : cabinets){
             ListCabinets model = new ListCabinets();
             model.setId(cabinet.getId());
-            model.setImage(cabinet.getImage());
+//            model.setImage(cabinet.getImage());
             model.setNumber(cabinet.getNumber());
             model.setDescription(cabinet.getDescription());
             result.add(model);
@@ -74,7 +74,7 @@ public class CabinetService {
         CabinetDto cabinetDto = new CabinetDto();
         cabinetDto.setName(cabinet.getName());
         cabinetDto.setFloorNumber(cabinet.getFloorNumber());
-        cabinetDto.setImage(cabinet.getImage());
+//        cabinetDto.setImage(cabinet.getImage());
         cabinetDto.setDescription(cabinet.getDescription());
         cabinetDto.setNumber(cabinet.getNumber());
         return cabinetDto;
@@ -93,7 +93,7 @@ public class CabinetService {
         Cabinet cabinet = cabinetRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("cabinet с таким id не существует! id = ", id));
         cabinet.setStatus(Status.ACTIVATE);
-        cabinet.setImage(cabinetDto.getImage());
+//        cabinet.setImage(cabinetDto.getImage());
         cabinet.setDescription(cabinetDto.getDescription());
         cabinet.setName(cabinetDto.getName());
         cabinet.setName(cabinetDto.getName());
@@ -111,7 +111,7 @@ public class CabinetService {
             cabinetDto.setId(cabinet.getId());
             cabinetDto.setName(cabinet.getName());
             cabinetDto.setNumber(cabinet.getNumber());
-            cabinetDto.setImage(cabinet.getImage());
+//            cabinetDto.setImage(cabinet.getImage());
             cabinetDto.setFloorNumber(cabinet.getFloorNumber());
 
             return cabinetDto;

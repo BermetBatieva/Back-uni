@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Data
@@ -20,8 +21,16 @@ public class Image{
 
     @Column(name = "name", nullable = false)
     private String name;
+
     @Column(name = "format", nullable = false)
     private String format;
+
     @Column(name = "url", nullable = false)
     private String url;
+
+    @ManyToOne
+    private Building building;
+
+    @ManyToOne
+    private Cabinet cabinet;
 }

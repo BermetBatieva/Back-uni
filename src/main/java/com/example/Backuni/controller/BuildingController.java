@@ -32,7 +32,7 @@ public class BuildingController {
 
 
     @PutMapping("/image/{buildId}")
-    public ResponseEntity<Building> setImage(@RequestParam(name = "file") MultipartFile multipartFile, //больше одного RequestParam нельзя, когда MultipartFile
+    public ResponseEntity<Building> setImage(@RequestParam(name = "file") MultipartFile[] multipartFile, //больше одного RequestParam нельзя, когда MultipartFile
                                             @PathVariable Long buildId) throws IOException, IOException {
         return service.setImage(multipartFile,buildId);
     }
