@@ -85,6 +85,14 @@ public class CabinetService {
         cabinetDto.setName(cabinet.getName());
         cabinetDto.setFloorNumber(cabinet.getFloorNumber());
 //        cabinetDto.setImage(cabinet.getImage());
+
+        List<String>  url = new ArrayList<>();
+        List<Image> imageList = imageRepository.findByBuilding_IdAndCabinet_Id(cabinet.getBuilding().getId(),id);
+
+        for(Image i : imageList ){
+            url.add(i.getUrl());
+        }
+        cabinetDto.setUrlImage(url);
         cabinetDto.setDescription(cabinet.getDescription());
         cabinetDto.setNumber(cabinet.getNumber());
         return cabinetDto;
@@ -162,6 +170,7 @@ public class CabinetService {
 
                 Image image = new Image();
                 image.setCabinet(cabinet);
+                image.setBuilding(cabinet.getBuilding());
                 image.setName((String) uploadResult.get("public_id"));
                 image.setUrl((String) uploadResult.get("url"));
                 image.setFormat((String) uploadResult.get("format"));

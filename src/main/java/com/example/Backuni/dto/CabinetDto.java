@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -16,7 +18,7 @@ public class CabinetDto {
 
     private Long number;
 
-    private byte[] image;
+    private List<String> urlImage;
 
     private String name;
 
