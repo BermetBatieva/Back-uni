@@ -87,9 +87,4 @@ public class BuildingController {
     public ResponseEntity<Building> update(@PathVariable Long id,@RequestBody BuildingDto model) {
         return new ResponseEntity<>(service.updateById(id,model),HttpStatus.OK);
     }
-
-    @PostMapping("delete/{id}")
-    public  ResponseEntity<Image> deleteImage(@PathVariable Long id){
-        return  new ResponseEntity<>(service.deleteImage(id),HttpStatus.OK);
-    }
 }
