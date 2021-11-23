@@ -1,6 +1,7 @@
 package com.example.Backuni.controller;
 
 import com.example.Backuni.dto.AuthenticationResponse;
+import com.example.Backuni.dto.ResponseMessage;
 import com.example.Backuni.dto.UserDto;
 import com.example.Backuni.jwt.JwtUtils;
 import com.example.Backuni.service.UserService;
@@ -47,4 +48,13 @@ public class LoginController {
 
         return ResponseEntity.ok(new AuthenticationResponse(jwt));
     }
+
+
+    @PostMapping("/forgotPassword/{email}") //на email юзера приходит уникальная ссылка со сроком истечения в 5 минут для изменения пароля на почту.
+    public ResponseMessage sendForgotPassword(@PathVariable String email){
+        return userService.sendForgotPassword(email);
+    }
+
+
+
 }
