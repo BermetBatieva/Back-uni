@@ -20,5 +20,7 @@ public interface CabinetRepository extends JpaRepository<Cabinet,Long> {
 
     Cabinet findByIdAndBuilding_Id(Long id, Long bId);
 
+    List<Cabinet> findByBuilding_Id(Long Id);
+
 
 }

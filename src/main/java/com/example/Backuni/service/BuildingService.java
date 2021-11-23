@@ -47,6 +47,9 @@ public class BuildingService {
     @Autowired
     private ImageRepository imageRepository;
 
+    @Autowired
+    private CabinetRepository cabinetRepository;
+
 
     public Building addBuilding(BuildingDto dto) throws AlreadyExistException {
         if (repository.existsBuildingByNameAndStatus(dto.getName(), Status.ACTIVATE)) {
@@ -234,6 +237,12 @@ public class BuildingService {
                 () -> new ResourceNotFoundException("здание с таким id не существует! id = ", id));
         building.setStatus(Status.DELETED);
         repository.save(building);
+        List<Cabinet> cabinets = cabinetRepository.findByBuilding_Id(id);
+        for(Cabinet cabinet : cabinets){
+            cabinet.setStatus(Status.DELETED);
+            cabinetRepository.save(cabinet);
+        }
+
         return new DeletedDTO(id);
     }
 
