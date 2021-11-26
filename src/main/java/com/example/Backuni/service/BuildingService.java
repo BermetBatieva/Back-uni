@@ -1,6 +1,7 @@
 package com.example.Backuni.service;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.Backuni.dto.BuildingDto;
 import com.example.Backuni.dto.CabinetDto;
@@ -191,6 +192,7 @@ public class BuildingService {
             model.setUsableArea(building.getUsableArea());
             model.setDescription(building.getDescription());
             model.setQuantityOfFloor(building.getQuantityOfFloor());
+            model.setBuildingType(building.getType());
 
             result.add(model);
         }
@@ -314,6 +316,8 @@ public class BuildingService {
                                 Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().length() - 4))
                         .toFile();
                 file.transferTo(file1);
+
+
 
                 Cloudinary cloudinary = new Cloudinary(urlKey);
                 Map uploadResult = cloudinary.uploader().upload(file1, ObjectUtils.emptyMap());
